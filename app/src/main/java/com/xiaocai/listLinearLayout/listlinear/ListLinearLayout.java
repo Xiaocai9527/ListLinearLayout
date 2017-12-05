@@ -1,4 +1,4 @@
-package com.xiaocai.listLinearLayout;
+package com.xiaocai.listLinearLayout.listlinear;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+
+import com.xiaocai.listLinearLayout.util.DimenUtils;
 
 import java.util.List;
 
@@ -34,12 +36,21 @@ public class ListLinearLayout extends LinearLayout
      */
     private int lineSpacing = DimenUtils.dpToPxInt(3);
     /**
+     * 默认竖直间距5dp
+     */
+    private int rowSpacing = DimenUtils.dpToPxInt(5);
+    /**
      * LinearLayout的最大宽度
      */
     private int MAX_WIDTH = 0;
 
     private int paddingLeft = 0;
     private int paddingRight = 0;
+    /**
+     * item的默认高度
+     */
+    private int itemHeight = DimenUtils.dpToPxInt(50);
+
 
     public ListLinearLayout(Context context)
     {
@@ -53,6 +64,10 @@ public class ListLinearLayout extends LinearLayout
 
     public void setAdapter(LinearLayoutAdapter adapter)
     {
+        if (adapter == null)
+        {
+            return;
+        }
         this.mAdapter = adapter;
         setOrientation(oriention);
         inflateView();
@@ -100,21 +115,20 @@ public class ListLinearLayout extends LinearLayout
              */
             for (int j = 0; j < currentColumn; j++)
             {
-                int itemWidth = (MAX_WIDTH - paddingLeft - paddingRight - 3 * lineSpacing) / 4;
-                LayoutParams layoutParams = new LayoutParams(itemWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+                int itemWidth = (MAX_WIDTH - paddingLeft - paddingRight - (mColumn - 1) * rowSpacing) / mColumn;
+                LayoutParams layoutParams = new LayoutParams(itemWidth, itemHeight);
                 if (j == 0)
                 {
                     layoutParams.setMargins(paddingLeft, 0, 0, 0);
-                } else if (j == 3)
+                } else if (j == (mColumn - 1))
                 {
-                    layoutParams.setMargins(lineSpacing, 0, paddingRight, 0);
+                    layoutParams.setMargins(rowSpacing, 0, paddingRight, 0);
                 } else
                 {
-                    layoutParams.setMargins(lineSpacing, 0, 0, 0);
+                    layoutParams.setMargins(rowSpacing, 0, 0, 0);
                 }
-                int position = i * mColumn + currentColumn;
-
-                View view = mAdapter.getView(position - 1);
+                int position = i * mColumn + j;
+                View view = mAdapter.getView(position);
                 view.setLayoutParams(layoutParams);
                 linearLayout.addView(view);
             }
@@ -129,7 +143,6 @@ public class ListLinearLayout extends LinearLayout
             int width = measureWidth(widthMeasureSpec);
             if (width > 0)
             {
-
                 MAX_WIDTH = width;
                 inflateView();
             }
@@ -157,6 +170,16 @@ public class ListLinearLayout extends LinearLayout
             result = Math.min(result, size);
         }
         return result;
+    }
+
+    public int getRowSpacing()
+    {
+        return rowSpacing;
+    }
+
+    public void setRowSpacing(int rowSpacing)
+    {
+        this.rowSpacing = rowSpacing;
     }
 
     public int getmColumn()
@@ -198,6 +221,11 @@ public class ListLinearLayout extends LinearLayout
     public void setPaddingLeft(int paddingLeft)
     {
         this.paddingLeft = paddingLeft;
+    }
+
+    public void setItemHeight(int itemHeight)
+    {
+        this.itemHeight = itemHeight;
     }
 
     @Override

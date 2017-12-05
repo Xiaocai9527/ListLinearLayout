@@ -27,7 +27,7 @@
  */
 
 
-package com.xiaocai.listLinearLayout;
+package com.xiaocai.listLinearLayout.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;

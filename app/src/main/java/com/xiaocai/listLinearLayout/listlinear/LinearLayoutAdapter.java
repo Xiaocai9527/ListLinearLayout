@@ -1,6 +1,8 @@
-package com.xiaocai.listLinearLayout;
+package com.xiaocai.listLinearLayout.listlinear;
 
 import android.view.View;
+
+import com.xiaocai.listLinearLayout.util.AppUtils;
 
 import java.util.List;
 
@@ -19,7 +21,8 @@ public abstract class LinearLayoutAdapter<T>
      * item的xml布局
      */
     private int mItemLayoutId;
-
+    private View itemView;
+    private ViewHolder holder;
 
     public LinearLayoutAdapter(int itemLayoutId)
     {
@@ -30,6 +33,8 @@ public abstract class LinearLayoutAdapter<T>
     {
         this.mItemLayoutId = itemLayoutId;
         this.mDatas = data;
+        itemView = View.inflate(AppUtils.getAppContext(), mItemLayoutId, null);
+        holder = new ViewHolder(itemView);
     }
 
     /**
@@ -39,6 +44,12 @@ public abstract class LinearLayoutAdapter<T>
      * @return
      */
     public abstract View getView(int position);
+
+    public void setNewData(List<T> data)
+    {
+        mDatas.clear();
+        mDatas = data;
+    }
 
     public List<T> getData()
     {
@@ -58,5 +69,15 @@ public abstract class LinearLayoutAdapter<T>
     public void setmItemLayoutId(int mItemLayoutId)
     {
         this.mItemLayoutId = mItemLayoutId;
+    }
+
+    public ViewHolder getHolder()
+    {
+        return holder;
+    }
+
+    public void setHolder(ViewHolder holder)
+    {
+        this.holder = holder;
     }
 }
